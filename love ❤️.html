@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Love Generator 💖</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to right, #ffb6c1, #ffe4e1);
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .input-container {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 5;
+      width: 90%;
+    }
+
+    .input-container input {
+      width: 80%;
+      padding: 12px;
+      margin: 8px 0;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      box-shadow: 0 0 10px rgba(255, 77, 109, 0.3);
+    }
+
+    .input-container button {
+      padding: 12px 25px;
+      font-size: 1.2em;
+      background-color: #ff4d6d;
+      color: white;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ff4d6d;
+      transition: transform 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .input-container button:hover {
+      transform: scale(1.05);
+      background-color: #ff3366;
+    }
+
+    .love-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+      display: none;
+      width: 100%;
+    }
+
+    .heart-behind {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: #ff4d6d;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      opacity: 0.3;
+      z-index: 1;
+    }
+
+    .heart-behind::before,
+    .heart-behind::after {
+      content: "";
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: #ff4d6d;
+      border-radius: 50%;
+    }
+
+    .heart-behind::before {
+      top: -100px;
+      left: 0;
+    }
+
+    .heart-behind::after {
+      left: 100px;
+      top: 0;
+    }
+
+    .names {
+      font-size: 2em;
+      font-weight: bold;
+      color: white;
+      animation: growText 3s infinite alternate ease-in-out;
+      text-shadow: 2px 2px 15px #ff3366;
+      padding: 0 10px;
+      word-wrap: break-word;
+    }
+
+    @keyframes growText {
+      from { transform: scale(1); }
+      to { transform: scale(1.2); }
+    }
+
+    .heart {
+      width: 24px;
+      height: 24px;
+      position: absolute;
+      background: #ff3366;
+      transform: rotate(-45deg);
+      animation: float 10s linear infinite;
+      opacity: 0.7;
+      z-index: 0;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      width: 24px;
+      height: 24px;
+      background: #ff3366;
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -12px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 12px;
+      top: 0;
+    }
+
+    @keyframes float {
+      0% {
+        bottom: -10%;
+        transform: rotate(-45deg) translateY(0);
+        opacity: 0.7;
+      }
+      100% {
+        bottom: 110%;
+        transform: rotate(-45deg) translateY(-200px);
+        opacity: 0;
+      }
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: blue;
+      font-size: 0.9em;
+      text-shadow: 1px 1px 5px #d6336c;
+      z-index: 10;
+    }
+
+    @media (min-width: 600px) {
+      .names {
+        font-size: 3em;
+      }
+      .heart-behind {
+        width: 250px;
+        height: 250px;
+      }
+
+      .heart-behind::before,
+      .heart-behind::after {
+        width: 250px;
+        height: 250px;
+      }
+
+      .heart-behind::before {
+        top: -125px;
+      }
+
+      .heart-behind::after {
+        left: 125px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="input-container">
+  <input type="text" id="name1" placeholder="Your Name ❤️">
+  <input type="text" id="name2" placeholder="Lover's Name 💕">
+  <br>
+  <button onclick="showLove()">Show Our Love 💖</button>
+</div>
+
+<div class="heart-behind" id="bg-heart" style="display: none;"></div>
+
+<div class="love-container" id="loveBox">
+  <div class="names" id="loveNames"></div>
+</div>
+
+<footer>
+  💘 Love lives here — Forever & Always 💘
+ <p>copyright @ msangi jr</p>
+</footer>
+
+<script>
+  function showLove() {
+    const n1 = document.getElementById('name1').value.trim();
+    const n2 = document.getElementById('name2').value.trim();
+    if (!n1 || !n2) {
+      alert("Please enter both names ❤️");
+      return;
+    }
+
+    document.getElementById('loveNames').textContent = `${n1} ❤️ ${n2}`;
+    document.getElementById('loveBox').style.display = 'block';
+    document.getElementById('bg-heart').style.display = 'block';
+
+    // Only start animation once
+    if (!window.heartsStarted) {
+      setInterval(createHeart, 300);
+      window.heartsStarted = true;
+    }
+  }
+
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (Math.random() * 3 + 6) + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+      heart.remove();
+    }, 10000);
+  }
+</script>
+
+</body>
+</html>
